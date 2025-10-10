@@ -30,12 +30,15 @@ inline const std::string grayscale = R"(
     
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
+    uniform float u_intensity;
     
     void main() {
-        vec3 color = texture2D(u_texture, v_texCoord).rgb;
-        float gray = dot(color, vec3(0.299, 0.587, 0.114));
-        gl_FragColor = vec4(vec3(gray), 1.0);
+        vec4 color = texture2D(u_texture, v_texCoord);
+        float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        vec3 mixed = mix(color.rgb, vec3(gray), clamp(u_intensity, 0.0, 1.0));
+        gl_FragColor = vec4(mixed, color.a);
     }
+
 )";
 
 CCTexture2D* capture(CCRenderTexture* renderTexture) { // taken from death animations so any bugs are also there
@@ -96,6 +99,13 @@ class $modify(PlayLayer) {
     void setupHasCompleted() {
         PlayLayer::setupHasCompleted();
         
+        if (
+            Mod::get()->getSettingValue<float>("intensity") <= 0.f
+            || Mod::get()->getSettingValue<bool>("disable")
+        ) {
+            return;
+        }
+        
         auto f = m_fields.self();
         
         if (f->m_frame) return;
@@ -134,8 +144,13 @@ class $modify(PlayLayer) {
             cache->addProgram(shader, "shader"_spr);
         }
         
-        if (shader)
-            f->m_frame->setShaderProgram(shader);
+        shader->use();
+        shader->setUniformLocationWith1f(
+            glGetUniformLocation(shader->getProgram(), "u_intensity"),
+            Mod::get()->getSettingValue<float>("intensity")
+        );
+        
+        f->m_frame->setShaderProgram(shader);
     }
     
 };

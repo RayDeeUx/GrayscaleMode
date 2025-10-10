@@ -10,5 +10,19 @@
 	"name": "Grayscale",
 	"version": "v1.0.0",
 	"developer": "Zilko",
-	"description": ""
+	"description": "",
+	"settings": {
+	  "disable": {
+			"name": "Disable",
+			"type": "bool",
+			"default": false
+		},
+  "intensity": {
+    "name": "Intensity",
+    "type": "float",
+    "default": 1.0,
+    "min": 0.0,
+    "max": 1.0
+}
+	}
 }

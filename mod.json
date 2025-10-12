@@ -24,11 +24,20 @@
 		  	"default": 1.0,
 		  	"min": 0.0,
 		  	"max": 1.0
-	  	}
+	  	},
+		"showInPause": {
+			"name": "Show in Pause Menu",
+			"type": "bool",
+			"default": true
+		}
 	},
 	"dependencies": {
 		"ninxout.options_api": {
 			"version": ">=1.0.1",
+			"importance": "recommended"
+		},
+		"geode.node-ids": {
+			"version": ">=1.21.1",
 			"importance": "recommended"
 		},
 		"geode.custom-keybinds": {

@@ -1,5 +1,7 @@
 #include <ninxout.options_api/include/API.hpp>
+#include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <Geode/ui/GeodeUI.hpp>
 
 using namespace geode::prelude;
 
@@ -131,6 +133,32 @@ class $modify(MyPlayLayer, PlayLayer) {
 
 		f->m_frame->setShaderProgram(shader);
 		if (!Mod::get()->getSettingValue<bool>("enabled")) f->m_frame->setOpacity(0);
+	}
+};
+
+class $modify(MyPauseLayer, PauseLayer) {
+	void onSettings(CCObject* sender) {
+		PauseLayer::onSettings(sender);
+		if (!Mod::get()->getSettingValue<bool>("showInPause")) return;
+		auto optionsLayer = CCScene::get()->getChildByType<GameOptionsLayer>(0);
+		if (!optionsLayer) return;
+		auto optionsMenu = optionsLayer->m_mainLayer->getChildByType<CCMenu>(1);
+		auto settingsSprite = CircleButtonSprite::createWithSpriteFrameName("edit_eSh_GrayscaleBtn_001.png", 1.f, CircleBaseColor::DarkPurple, CircleBaseSize::Small);
+		settingsSprite->setScale(.75f);
+		settingsSprite->getTopNode()->setPositionY(settingsSprite->getTopNode()->getPositionY() - 2.f);
+		settingsSprite->setID("grayscale-settings-sprite"_spr);
+		auto settingsButton = CCMenuItemSpriteExtra::create(settingsSprite, this, menu_selector(MyPauseLayer::openSettings));
+		settingsButton->setPosition({-160.f, 119.f});
+		settingsButton->setID("grayscale-settings-button"_spr);
+		auto text = CCLabelBMFont::create("Grayscale", "bigFont.fnt");
+		text->setScale(.5f);
+		text->setPosition({-100.f, 120.f});
+		text->setID("grayscale-settings-label"_spr);
+		optionsMenu->addChild(settingsButton);
+		optionsMenu->addChild(text);
+	}
+	void openSettings(CCObject* sender) {
+		geode::openSettingsPopup(Mod::get(), false);
 	}
 };
 

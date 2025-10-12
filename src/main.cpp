@@ -60,10 +60,7 @@ CCTexture2D* capture(CCRenderTexture* renderTexture, PlayLayer* pl) { // taken f
 	if (!renderTexture) renderTexture = CCRenderTexture::create(winSize.width, winSize.height);
 
 	renderTexture->beginWithClear(0, 0, 0, 1);
-	const bool originalVis = pl->m_uiLayer->isVisible();
-	pl->m_uiLayer->setVisible(false);
 	pl->visit();
-	pl->m_uiLayer->setVisible(originalVis);
 	renderTexture->end();
 
 	director->m_obWinSizeInPoints = ogRes;
@@ -100,11 +97,9 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (intensity == 0.f) return;
 		
 		auto f = m_fields.self();
-		
 		if (f->m_frame) return;
 		
 		CCSize size = CCDirector::get()->getWinSize();
-		
 		f->m_renderTexture = CCRenderTexture::create(size.width, size.height);
 		
 		f->m_frame = CCSprite::createWithTexture(capture(f->m_renderTexture, this));

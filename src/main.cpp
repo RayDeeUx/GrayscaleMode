@@ -134,6 +134,30 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 };
 
+$on_mod(Loaded) {
+	listenForSettingChanges<bool>("enabled", [](bool newEnabled) {
+		PlayLayer* pl = PlayLayer::get();\
+		if (!pl) return;\
+		CCNode* grayscaleModeSprite = pl->getChildByID("grayscale-mode-sprite"_spr);\
+		if (!grayscaleModeSprite) return;\
+		GLubyte determinedOpacity = !newEnabled ? 0 : 255;\
+		static_cast<CCSprite*>(grayscaleModeSprite)->setOpacity(determinedOpacity);\
+	});
+	listenForSettingChanges<double>("intensity", [](double newIntensity) {
+		PlayLayer* pl = PlayLayer::get();
+		if (!pl) return;
+
+		if (!pl->getChildByID("grayscale-mode-sprite"_spr)) return;
+
+		CCShaderCache* cache = CCShaderCache::sharedShaderCache();
+		CCGLProgram* shader = cache->programForKey("grayscale-shader"_spr);
+		if (!shader) return;
+
+		shader->use();
+		shader->setUniformLocationWith1f(glGetUniformLocation(shader->getProgram(), "u_intensity"), std::clamp<float>(static_cast<float>(newIntensity), 0.f, 1.f));
+	});
+}
+
 #define ADD_LEVELINFOLAYER_TOGGLE(displayName, settingsID, detailedDesc)\
 	OptionsAPI::addPreLevelSetting<bool>(\
 		displayName,\
@@ -207,16 +231,6 @@ $on_mod(Loaded) {
 		))));
 		return Ok();
 	}();
-	/*
-	const bool origValue = Mod::get()->getSettingValue<bool>(settingsID);\
-	Mod::get()->setSettingValue<bool>(settingsID, !origValue);\
-	PlayLayer* pl = PlayLayer::get();\
-	if (gjbgl != pl) return;\
-	CCNode* grayscaleModeSprite = pl->getChildByID("grayscale-mode-sprite"_spr);\
-	if (!grayscaleModeSprite) return;\
-	GLubyte determinedOpacity = origValue ? 0 : 255;\
-	static_cast<CCSprite*>(grayscaleModeSprite)->setOpacity(determinedOpacity);\
-	*/
 	new EventListener([=](InvokeBindEventV2* event) {
 		if (!event->isDown()) return ListenerResult::Propagate;
 
@@ -241,10 +255,7 @@ $on_mod(Loaded) {
 		Mod::get()->setSettingValue<double>("intensity", newValue);
 
 		PlayLayer* pl = PlayLayer::get();
-		if (!pl) return ListenerResult::Propagate;
-
-		CCNode* grayscaleModeSprite = pl->getChildByID("grayscale-mode-sprite"_spr);
-		if (!grayscaleModeSprite) return ListenerResult::Propagate;
+		if (!pl || !pl->getChildByID("grayscale-mode-sprite"_spr)) return ListenerResult::Propagate;
 
 		CCShaderCache* cache = CCShaderCache::sharedShaderCache();
 		CCGLProgram* shader = cache->programForKey("grayscale-shader"_spr);
@@ -262,10 +273,7 @@ $on_mod(Loaded) {
 		Mod::get()->setSettingValue<double>("intensity", newValue);
 
 		PlayLayer* pl = PlayLayer::get();
-		if (!pl) return ListenerResult::Propagate;
-
-		CCNode* grayscaleModeSprite = pl->getChildByID("grayscale-mode-sprite"_spr);
-		if (!grayscaleModeSprite) return ListenerResult::Propagate;
+		if (!pl || !pl->getChildByID("grayscale-mode-sprite"_spr)) return ListenerResult::Propagate;
 
 		CCShaderCache* cache = CCShaderCache::sharedShaderCache();
 		CCGLProgram* shader = cache->programForKey("grayscale-shader"_spr);

@@ -1,28 +1,28 @@
 {
-	"geode": "4.9.0",
+	"geode": "4.7.0",
 	"gd": {
 		"win": "2.2074",
-		"android": "2.2074",
 		"mac": "2.2074",
-		"ios": "2.2074"
+		"ios": "2.2074",
+		"android": "2.2074"
 	},
 	"id": "zilko.grayscale",
-	"name": "Grayscale",
+	"name": "GrayscaleMode",
 	"version": "v1.0.0",
-	"developer": "Zilko",
-	"description": "",
+	"developers": ["RayDeeUx", "Zilko"],
+	"description": "Grayscale Mode without having digging through your device settings!",
 	"settings": {
-	  "disable": {
-			"name": "Disable",
+		"enabled": {
+			"name": "Enabled",
 			"type": "bool",
-			"default": false
+			"default": true
 		},
-  "intensity": {
-    "name": "Intensity",
-    "type": "float",
-    "default": 1.0,
-    "min": 0.0,
-    "max": 1.0
-}
+		"intensity": {
+			"name": "Intensity",
+		  	"type": "float",
+		  	"default": 1.0,
+		  	"min": 0.0,
+		  	"max": 1.0
+	  	}
 	}
 }

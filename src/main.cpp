@@ -225,6 +225,7 @@ $on_mod(Loaded) {
 	ADD_PAUSELAYER_TOGGLE("Grayscale Mode", "enabled", "Play the level with Grayscale Mode enabled.")
 }
 
+/*
 #ifndef GEODE_IS_IOS
 #include <geode.custom-keybinds/include/OptionalAPI.hpp>
 using namespace keybinds;
@@ -313,3 +314,62 @@ $on_mod(Loaded) {
 	}, InvokeBindFilterV2(nullptr, "lower-intensity"_spr));
 }
 #endif
+*/
+
+$on_mod(Loaded) {
+	listenForKeybindSettingPresses("toggle-grayscale", [](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+        if (!down || repeat) return ListenerResult::Propagate;
+
+		const bool origValue = Mod::get()->getSettingValue<bool>("enabled");
+		Mod::get()->setSettingValue<bool>("enabled", !origValue);
+
+		PlayLayer* pl = PlayLayer::get();
+		if (!pl) return ListenerResult::Propagate;
+
+		CCNode* grayscaleModeSprite = pl->getChildByID("grayscale-mode-sprite"_spr);
+		if (!grayscaleModeSprite) return ListenerResult::Propagate;
+
+		GLubyte determinedOpacity = origValue ? 0 : 255;
+		static_cast<CCSprite*>(grayscaleModeSprite)->setOpacity(determinedOpacity);
+
+		return ListenerResult::Propagate;
+    });
+	listenForKeybindSettingPresses("raise-intensity", [](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+        if (!down || repeat) return ListenerResult::Propagate;
+
+		const double origValue = Mod::get()->getSettingValue<double>("intensity");
+		const float newValue = std::clamp<float>(static_cast<float>(origValue + .01f), 0.f, 1.f);
+		Mod::get()->setSettingValue<double>("intensity", newValue);
+
+		PlayLayer* pl = PlayLayer::get();
+		if (!pl || !pl->getChildByID("grayscale-mode-sprite"_spr)) return ListenerResult::Propagate;
+
+		CCShaderCache* cache = CCShaderCache::sharedShaderCache();
+		CCGLProgram* shader = cache->programForKey("grayscale-shader"_spr);
+		if (!shader) return ListenerResult::Propagate;
+
+		shader->use();
+		shader->setUniformLocationWith1f(glGetUniformLocation(shader->getProgram(), "u_intensity"), newValue);
+
+		return ListenerResult::Propagate;
+    });
+	listenForKeybindSettingPresses("lower-intensity", [](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+        if (!down || repeat) return ListenerResult::Propagate;
+
+		const double origValue = Mod::get()->getSettingValue<double>("intensity");
+		const float newValue = std::clamp<float>(static_cast<float>(origValue - .01f), 0.f, 1.f);
+		Mod::get()->setSettingValue<double>("intensity", newValue);
+
+		PlayLayer* pl = PlayLayer::get();
+		if (!pl || !pl->getChildByID("grayscale-mode-sprite"_spr)) return ListenerResult::Propagate;
+
+		CCShaderCache* cache = CCShaderCache::sharedShaderCache();
+		CCGLProgram* shader = cache->programForKey("grayscale-shader"_spr);
+		if (!shader) return ListenerResult::Propagate;
+
+		shader->use();
+		shader->setUniformLocationWith1f(glGetUniformLocation(shader->getProgram(), "u_intensity"), newValue);
+
+		return ListenerResult::Propagate;
+    });
+}

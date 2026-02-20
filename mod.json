@@ -1,5 +1,5 @@
 {
-	"geode": "4.7.0",
+	"geode": "5.0.0-beta.3",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
@@ -20,30 +20,53 @@
 		},
 		"intensity": {
 			"name": "Intensity",
-		  	"type": "float",
-		  	"default": 1.0,
-		  	"min": 0.0,
-		  	"max": 1.0
-	  	},
+			"type": "float",
+			"default": 1.0,
+			"min": 0.0,
+			"max": 1.0
+		},
 		"showInPause": {
 			"name": "Show in Pause Menu",
 			"type": "bool",
 			"default": true
+		},
+		"keybinds-header": {
+			"name": "Keybinds",
+			"type": "title"
+		},
+		"toggle-grayscale": {
+			"name": "Toggle Grayscale Mode",
+			"description": "Toggles Grayscale Mode when playing a level.",
+			"type": "keybind",
+			"default": ["Shift+X"],
+			"category": "gameplay",
+			"migrate-from": "zilko.grayscale/toggle-grayscale"
+		},
+		"raise-intensity": {
+			"name": "Raise Intensity",
+			"description": "Increase the intensity of Grayscale Mode by 0.01.",
+			"type": "keybind",
+			"default": ["Shift+C"],
+			"category": "gameplay",
+			"migrate-from": "zilko.grayscale/raise-intensity"
+		},
+		"lower-intensity": {
+			"name": "Lower Intensity",
+			"description": "Decrease the intensity of Grayscale Mode by 0.01.",
+			"type": "keybind",
+			"default": ["Shift+Z"],
+			"category": "gameplay",
+			"migrate-from": "zilko.grayscale/lower-intensity"
 		}
 	},
 	"dependencies": {
 		"ninxout.options_api": {
-			"version": ">=1.0.1",
-			"importance": "recommended"
+			"version": ">=1.0.2",
+			"required": false
 		},
 		"geode.node-ids": {
-			"version": ">=1.21.1",
-			"importance": "recommended"
-		},
-		"geode.custom-keybinds": {
-			"version": ">=1.11.0",
-			"importance": "suggested",
-			"platforms": ["win", "mac", "android"]
+			"version": ">=1.22.0",
+			"required": false
 		}
 	},
 	"issues": {

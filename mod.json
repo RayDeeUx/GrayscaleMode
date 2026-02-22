@@ -1,5 +1,5 @@
 {
-	"geode": "5.0.0-beta.3",
+	"geode": "5.0.0-beta.4",
 	"gd": {
 		"win": "2.2081",
 		"mac": "2.2081",
@@ -8,7 +8,7 @@
 	},
 	"id": "zilko.grayscale",
 	"name": "GrayscaleMode",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developers": ["RayDeeUx", "Zilko"],
 	"description": "Grayscale Mode without digging through your device settings!",
 	"repository": "https://github.com/RayDeeUx/GrayscaleMode",
@@ -61,7 +61,7 @@
 	},
 	"dependencies": {
 		"ninxout.options_api": {
-			"version": ">=1.0.2",
+			"version": ">=1.0.3-beta.1",
 			"required": false
 		},
 		"geode.node-ids": {

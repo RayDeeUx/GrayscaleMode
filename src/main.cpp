@@ -137,6 +137,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 };
 
 class $modify(MyPauseLayer, PauseLayer) {
+	/*
 	void onSettings(CCObject* sender) {
 		PauseLayer::onSettings(sender);
 		if (!Mod::get()->getSettingValue<bool>("showInPause")) return;
@@ -157,6 +158,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		optionsMenu->addChild(settingsButton);
 		optionsMenu->addChild(text);
 	}
+	*/
 	void openSettings(CCObject* sender) {
 		geode::openSettingsPopup(Mod::get(), false);
 	}
